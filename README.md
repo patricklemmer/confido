@@ -1,34 +1,57 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Project Guidelines
+## Folder structure and routing
 
-## Getting Started
+This Next.js project uses Next's App Router for file based routing and a /src folder structure. All application code lives within /src, the app's root only holds config files.
 
-First, run the development server:
+To ensure consistency and avoid routing related issues, the "Split project files by feature or route" strategy is used inside the app route folder. This strategy stores globally shared application code in the root app directory and splits more specific application code into the route segments that use them.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+```
+.
+├── public                    # Must be in root
+├── src                       # Separates application code from configs
+│   ├── app                   # Nested folder hierachy inside app defines route structure
+│   ├── ├── components        # Non routing related components
+│   ├── ├── lib               # Non routing related libs
+│   ├── ├── dashboard         # Route /dashboard
+│   ├── ├── ├── components    # Dashboard components
+│   ├── ├── ├── lib           # Dashboard libs
+│   ├── ├── ├── page.ts       # Makes /dashboard routable
+│   ├── page.ts               # Main page.ts
+└── Config files              # All config files in root
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Read [project organization strategies](https://nextjs.org/docs/app/building-your-application/routing/colocation#project-organization-strategies) for more info.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Naming conventions
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- All dirs are in lowercase
+- It's recommended to use default exports for all pages
+- Variable and function names should be descriptive as much as possible
+- Within components, there should be the following hierachy:
+  - All hooks import come first
+  - Local states with `useState` function
+  - Locally generated values and functions
+  - All `useEffects` should come last before the render function. See example below
+  - Each section is separated from the other with an empty line to improve on readability of components
 
-## Learn More
+```js
+const HomePage: React.FC = () => {
+  /* Hook imports */
+  const { users } = useUser();
 
-To learn more about Next.js, take a look at the following resources:
+  /* Local states */
+  const [isActive, setIsActive] = useSate(false);
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+  /* Locally generated variables */
+  const filteredUsers = users.filter((user) => user.isActive);
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+  /* Effects */
+  useEffect(() => {
+    console.log("effect when component loads");
+  });
 
-## Deploy on Vercel
+  return <div>Page details</div>;
+};
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+export default PageNamePage;
+```
