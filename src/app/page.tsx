@@ -5,12 +5,15 @@
 import React from 'react';
 
 // Ant Design imports
-import { Button } from 'antd';
+import { Button, ConfigProvider } from 'antd';
+import theme from './themeConfig';
 
 const Home = () => (
-  <div className="App">
-    <Button type="primary">Button</Button>
-  </div>
+  <ConfigProvider theme={theme}>
+    <div className="App">
+      <Button type="primary">Button</Button>
+    </div>
+  </ConfigProvider>
 );
 
 export default Home;
